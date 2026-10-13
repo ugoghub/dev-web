@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTrack | Meu painel</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <aside>
+        <h1>DevTrack</h1>
+
+        <nav aria-label="Menu principal">
+            <a href="#dashboard" class="active">Dashboard</a>
+            <a href="#projetos">Meus projetos</a>
+            <a href="#estudos">Diário de estudos</a>
+            <a href="#metas">Minhas metas</a>
+        </nav>
+    </aside>
+
+    <main id="dashboard">
+        <header>
+            <h2>Meu painel</h2>
+            <p>Acompanhe sua evolução como desenvolvedor.</p>
+        </header>
+
+        <section aria-labelledby="resumo-titulo">
+            <h3 id="resumo-titulo">Resumo da semana</h3>
+
+            <article>
+                <h4>Projetos</h4>
+                <p>3</p>
+            </article>
+
+            <article>
+                <h4>Horas estudadas</h4>
+                <p>12 horas</p>
+            </article>
+
+            <article>
+                <h4>Meta semanal</h4>
+                <p>12 de 15 horas</p>
+            </article>
+        </section>
+
+        
+        <section id="projetos">
+            <h3>Meus projetos</h3>
+
+            <p id="mensagem-projetos">Seus projetos aparecerão aqui.</p>
+
+            <div id="lista-projetos"></div>
+
+            <button id="btn-adicionar-projeto" type="button">
+                Adicionar projeto
+            </button>
+
+            <form id="form-projeto" hidden>
+                <h4>Novo projeto</h4>
+
+                <div>
+                    <label for="nome-projeto">Nome do projeto</label>
+                    <input
+                        type="text"
+                        id="nome-projeto"
+                        name="nome"
+                        placeholder="Ex.: Sistema bancário"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="tecnologias-projeto">Tecnologias</label>
+                    <input
+                        type="text"
+                        id="tecnologias-projeto"
+                        name="tecnologias"
+                        placeholder="Ex.: Java, Spring Boot, PostgreSQL"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="descricao-projeto">Descrição</label>
+                    <textarea
+                        id="descricao-projeto"
+                        name="descricao"
+                        placeholder="Descreva seu projeto"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <button type="submit">Salvar projeto</button>
+                <button id="btn-cancelar-projeto" type="button">Cancelar</button>
+            </form>
+        </section>
+
+        <section id="estudos">
+            <h3>Atividades recentes</h3>
+            <p>Seus registros de estudo aparecerão aqui.</p>
+        </section>
+
+        
+        <section id="metas">
+            <h3>Minha meta semanal</h3>
+
+            <p>12 de 15 horas estudadas</p>
+
+            <div class="progress-bar"
+                role="progressbar"
+                aria-label="Progresso da meta semanal"
+                aria-valuemin="0"
+                aria-valuemax="15"
+                aria-valuenow="12">
+                <div class="progress-fill"></div>
+            </div>
+
+            <p>Você completou 80% da sua meta!</p>
+        </section>
+    </main>
+</body>
+</html>
