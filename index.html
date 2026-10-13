@@ -32,12 +32,12 @@
 
             <article>
                 <h4>Projetos</h4>
-                <p>3</p>
+                <p id="total-projetos">0</p>
             </article>
 
             <article>
                 <h4>Horas estudadas</h4>
-                <p>12 horas</p>
+                <p><p id="horas-estudadas">0h</p></p>
             </article>
 
             <article>
@@ -98,27 +98,109 @@
             </form>
         </section>
 
+        
         <section id="estudos">
-            <h3>Atividades recentes</h3>
-            <p>Seus registros de estudo aparecerão aqui.</p>
+            <h3>Diário de estudos</h3>
+
+            <p id="mensagem-estudos">
+                Você ainda não registrou nenhuma atividade.
+            </p>
+
+            <div id="lista-estudos"></div>
+
+            <button id="btn-adicionar-estudo" type="button">
+                Registrar estudo
+            </button>
+
+            <form id="form-estudo" hidden>
+                <h4>Nova atividade</h4>
+
+                <div>
+                    <label for="tema-estudo">O que você estudou?</label>
+                    <input
+                        type="text"
+                        id="tema-estudo"
+                        name="tema"
+                        placeholder="Ex.: Injeção de dependência"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="tecnologia-estudo">Tecnologia</label>
+                    <input
+                        type="text"
+                        id="tecnologia-estudo"
+                        name="tecnologia"
+                        placeholder="Ex.: Java e Spring Boot"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="duracao-estudo">Duração em minutos</label>
+                    <input
+                        type="number"
+                        id="duracao-estudo"
+                        name="duracao"
+                        min="1"
+                        step="1"
+                        placeholder="Ex.: 60"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="data-estudo">Data do estudo</label>
+                    <input
+                        type="date"
+                        id="data-estudo"
+                        name="data"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="descricao-estudo">Anotações (opcional)</label>
+                    <textarea
+                        id="descricao-estudo"
+                        name="descricao"
+                        placeholder="O que você aprendeu?"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <button type="submit">Salvar estudo</button>
+
+                <button id="btn-cancelar-estudo" type="button">
+                    Cancelar
+                </button>
+            </form>
         </section>
 
         
+        
         <section id="metas">
-            <h3>Minha meta semanal</h3>
+        <h3>Minha meta semanal</h3>
 
-            <p>12 de 15 horas estudadas</p>
+        <p>
+            <span id="horas-meta">0</span> de
+            <span id="meta-semanal">15</span> horas estudadas
+        </p>
 
-            <div class="progress-bar"
-                role="progressbar"
-                aria-label="Progresso da meta semanal"
-                aria-valuemin="0"
-                aria-valuemax="15"
-                aria-valuenow="12">
-                <div class="progress-fill"></div>
-            </div>
+        <div
+            class="progress-bar"
+            role="progressbar"
+            aria-label="Progresso da meta semanal"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            id="barra-meta"
+        >
+            <div class="progress-fill" id="progresso-meta"></div>
+        </div>
 
-            <p>Você completou 80% da sua meta!</p>
+        <p id="mensagem-meta">Você completou 0% da sua meta!</p>
         </section>
     </main>
 </body>
