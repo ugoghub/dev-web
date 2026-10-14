@@ -16,7 +16,7 @@
 }
 
 body {
-    margin: 10;
+    margin: 0;
     min-height: 100vh;
     font-family: Arial, sans-serif;
     background-color: var(--bg-primary);
@@ -253,7 +253,7 @@ button:active {
 }
 
 .progress-fill {
-    width: 80%;
+    width: 0%;
     height: 100%;
 
     border-radius: inherit;
@@ -330,6 +330,10 @@ nav a.active {
 .acoes-projeto .botao-excluir {
     background-color: #991b1b;
     color: #fee2e2;
+}
+
+.acoes-projeto .botao-excluir:hover {
+    background-color: #b91c1c;
 }
 
 
@@ -517,4 +521,58 @@ nav a.active {
     margin-right: 4px;
     padding: 10px 12px;
   }
+}
+
+
+#form-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+#form-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 180px;
+}
+
+#form-meta label {
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#form-meta input {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    color: var(--color-text);
+    background-color: var(--bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font: inherit;
+}
+
+#form-meta input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+#form-meta button {
+    min-height: 44px;
+    padding: 10px 16px;
+    color: #fff;
+    background-color: var(--color-primary);
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#form-meta button:hover {
+    background-color: #4f46e5;
 }

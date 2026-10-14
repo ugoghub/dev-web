@@ -34,6 +34,7 @@ const mensagemEstudos = document.querySelector("#mensagem-estudos");
 const CHAVE_ESTUDOS = "devtrack-estudos";
 
 let estudos = JSON.parse(localStorage.getItem(CHAVE_ESTUDOS)) ?? [];
+let estudoEmEdicao = null;
 
 const elementoHorasEstudadas = document.querySelector("#horas-estudadas");
 const elementoHorasMeta = document.querySelector("#horas-meta");
@@ -42,7 +43,30 @@ const barraMeta = document.querySelector("#barra-meta");
 const progressoMeta = document.querySelector("#progresso-meta");
 const mensagemMeta = document.querySelector("#mensagem-meta");
 
-const META_SEMANAL_MINUTOS = 15 * 60;
+const elementoHorasResumoMeta =
+    document.querySelector("#horas-resumo-meta");
+
+const elementoMetaResumoSemanal =
+    document.querySelector("#meta-resumo-semanal");
+
+
+const formularioMeta = document.querySelector("#form-meta");
+const campoMetaSemanal = document.querySelector("#campo-meta-semanal");
+
+const CHAVE_META = "devtrack-meta-semanal";
+
+const metaSalva = Number(
+    localStorage.getItem(CHAVE_META)
+);
+
+let metaSemanal =
+    Number.isFinite(metaSalva) &&
+    metaSalva >= 1 &&
+    metaSalva <= 168 &&
+    Number.isInteger(metaSalva * 2)
+        ? metaSalva
+        : 15;
+
 
 // Abre o formulário
 botaoAdicionar.addEventListener("click", function () {
@@ -57,12 +81,17 @@ botaoCancelar.addEventListener("click", function () {
     fecharFormulario();
 });
 
-botaoAdicionarEstudo.addEventListener("click", function () {
-    formularioEstudo.hidden = false;
 
-    campoDataEstudo.value = new Date().toLocaleDateString("en-CA");
-    campoTemaEstudo.focus();
+botaoAdicionarEstudo.addEventListener("click", function () {
+  estudoEmEdicao = null;
+
+  formularioEstudo.reset();
+  formularioEstudo.hidden = false;
+
+  campoDataEstudo.value = obterDataLocalISO();
+  campoTemaEstudo.focus();
 });
+
 
 botaoCancelarEstudo.addEventListener("click", function () {
     fecharFormularioEstudo();
@@ -82,9 +111,11 @@ function salvarEstudos() {
 
 
 function fecharFormularioEstudo() {
-    formularioEstudo.reset();
-    formularioEstudo.hidden = true;
+  formularioEstudo.reset();
+  formularioEstudo.hidden = true;
+  estudoEmEdicao = null;
 }
+
 
 // Cria e exibe um cartão para cada projeto
 
@@ -173,6 +204,31 @@ function renderizarEstudos() {
       cartao.append(descricao);
     }
 
+
+    const botoes = document.createElement("div");
+    botoes.classList.add("acoes-projeto");
+
+    const botaoEditarEstudo = document.createElement("button");
+    botaoEditarEstudo.type = "button";
+    botaoEditarEstudo.textContent = "Editar";
+
+    botaoEditarEstudo.addEventListener("click", function () {
+    editarEstudo(estudo.id);
+    });
+
+    const botaoExcluirEstudo = document.createElement("button");
+    botaoExcluirEstudo.type = "button";
+    botaoExcluirEstudo.textContent = "Excluir";
+    botaoExcluirEstudo.classList.add("botao-excluir");
+
+    botaoExcluirEstudo.addEventListener("click", function () {
+    excluirEstudo(estudo.id);
+    });
+
+    botoes.append(botaoEditarEstudo, botaoExcluirEstudo);
+    cartao.append(botoes);
+
+
     listaEstudos.append(cartao);
   });
 
@@ -200,6 +256,26 @@ function editarProjeto(id) {
 }
 
 
+function editarEstudo(id) {
+  const estudo = estudos.find(function (item) {
+    return item.id === id;
+  });
+
+  if (!estudo) return;
+
+  estudoEmEdicao = id;
+
+  campoTemaEstudo.value = estudo.tema;
+  campoTecnologiaEstudo.value = estudo.tecnologia;
+  campoDuracaoEstudo.value = estudo.duracao;
+  campoDataEstudo.value = estudo.data;
+  campoDescricaoEstudo.value = estudo.descricao;
+
+  formularioEstudo.hidden = false;
+  campoTemaEstudo.focus();
+}
+
+
 function excluirProjeto(id) {
     const confirmar = confirm("Deseja realmente excluir este projeto?");
 
@@ -214,6 +290,24 @@ function excluirProjeto(id) {
     salvarProjetos();
     renderizarProjetos();
 }
+
+
+function excluirEstudo(id) {
+  const confirmar = confirm(
+    "Deseja realmente excluir esta atividade de estudo?"
+  );
+
+  if (!confirmar) return;
+
+  estudos = estudos.filter(function (estudo) {
+    return estudo.id !== id;
+  });
+
+  salvarEstudos();
+  renderizarEstudos();
+  atualizarResumoEstudos();
+}
+
 
 function fecharFormulario() {
     formularioProjeto.reset();
@@ -264,34 +358,40 @@ function calcularMinutosEstudadosNaSemana() {
 }
 
 
+
 function atualizarResumoEstudos() {
-  const minutosEstudados = calcularMinutosEstudadosNaSemana();
-  const horasEstudadas = minutosEstudados / 60;
+    const minutosEstudados = calcularMinutosEstudadosNaSemana();
+    const horasEstudadas = minutosEstudados / 60;
+    const metaEmMinutos = metaSemanal * 60;
 
-  const porcentagem = Math.min(
-    (minutosEstudados / META_SEMANAL_MINUTOS) * 100,
-    100
-  );
+    const porcentagem = Math.min(
+        (minutosEstudados / metaEmMinutos) * 100,
+        100
+    );
 
-  elementoHorasEstudadas.textContent =
-    `${Number(horasEstudadas.toFixed(2))}h`;
+    elementoHorasEstudadas.textContent =
+        `${Number(horasEstudadas.toFixed(2))}h`;
 
-  elementoHorasMeta.textContent =
-    Number(horasEstudadas.toFixed(2));
+    elementoHorasMeta.textContent =
+        Number(horasEstudadas.toFixed(2));
 
-  elementoMetaSemanal.textContent =
-    META_SEMANAL_MINUTOS / 60;
+    elementoMetaSemanal.textContent = metaSemanal;
+    elementoHorasResumoMeta.textContent =
+        Number(horasEstudadas.toFixed(2));
 
-  progressoMeta.style.width = `${porcentagem}%`;
+    elementoMetaResumoSemanal.textContent = metaSemanal;
 
-  barraMeta.setAttribute(
-    "aria-valuenow",
-    String(Math.round(porcentagem))
-  );
+    progressoMeta.style.width = `${porcentagem}%`;
 
-  mensagemMeta.textContent =
-    `Você completou ${Math.floor(porcentagem)}% da sua meta!`;
+    barraMeta.setAttribute(
+        "aria-valuenow",
+        String(Math.round(porcentagem))
+    );
+
+    mensagemMeta.textContent =
+        `Você completou ${Math.floor(porcentagem)}% da sua meta!`;
 }
+
 
 // Cadastra um projeto
 
@@ -330,30 +430,75 @@ formularioProjeto.addEventListener("submit", function (evento) {
 
 
 formularioEstudo.addEventListener("submit", function (evento) {
+  evento.preventDefault();
+
+  const duracao = Number(campoDuracaoEstudo.value);
+
+  if (!Number.isInteger(duracao) || duracao <= 0) {
+    alert("Informe uma duração em minutos maior que zero.");
+    return;
+  }
+
+  const dadosEstudo = {
+    tema: campoTemaEstudo.value.trim(),
+    tecnologia: campoTecnologiaEstudo.value.trim(),
+    duracao: duracao,
+    data: campoDataEstudo.value,
+    descricao: campoDescricaoEstudo.value.trim()
+  };
+
+  if (estudoEmEdicao !== null) {
+    const estudo = estudos.find(function (item) {
+      return item.id === estudoEmEdicao;
+    });
+
+    if (estudo) {
+      estudo.tema = dadosEstudo.tema;
+      estudo.tecnologia = dadosEstudo.tecnologia;
+      estudo.duracao = dadosEstudo.duracao;
+      estudo.data = dadosEstudo.data;
+      estudo.descricao = dadosEstudo.descricao;
+    }
+  } else {
+    const novoEstudo = {
+      id: crypto.randomUUID(),
+      ...dadosEstudo
+    };
+
+    estudos.push(novoEstudo);
+  }
+
+  salvarEstudos();
+  renderizarEstudos();
+  atualizarResumoEstudos();
+  fecharFormularioEstudo();
+});
+
+
+formularioMeta.addEventListener("submit", function (evento) {
     evento.preventDefault();
 
-    const duracao = Number(campoDuracaoEstudo.value);
+    const novaMeta = Number(campoMetaSemanal.value);
 
-    if (!Number.isInteger(duracao) || duracao <= 0) {
-        alert("Informe uma duração em minutos maior que zero.");
+    if (
+        !Number.isFinite(novaMeta) ||
+        novaMeta < 1 ||
+        novaMeta > 168 ||
+        novaMeta * 2 !== Math.floor(novaMeta * 2)
+    ) {
+        alert("Informe uma meta entre 1 e 168 horas, em intervalos de meia hora.");
         return;
     }
 
-    const estudo = {
-        id: crypto.randomUUID(),
-        tema: campoTemaEstudo.value.trim(),
-        tecnologia: campoTecnologiaEstudo.value.trim(),
-        duracao: duracao,
-        data: campoDataEstudo.value,
-        descricao: campoDescricaoEstudo.value.trim()
-    };
+    metaSemanal = novaMeta;
 
-    estudos.push(estudo);
-    salvarEstudos();
-    renderizarEstudos();
+    localStorage.setItem(CHAVE_META, String(metaSemanal));
+
     atualizarResumoEstudos();
-    fecharFormularioEstudo();
 });
+
+
+campoMetaSemanal.value = String(metaSemanal);
 
 // Carrega os projetos salvos ao abrir a página
 renderizarProjetos();
